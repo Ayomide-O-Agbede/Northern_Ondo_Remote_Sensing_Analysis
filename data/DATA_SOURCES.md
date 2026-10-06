@@ -245,7 +245,6 @@ The project was developed using:
 * **QGIS 3.44.9** — cartographic visualization, map production and final map exports
 * **Git/GitHub** — project documentation and version-controlled portfolio presentation
 
-No Python-based analysis was used in this project.
 
 ---
 
