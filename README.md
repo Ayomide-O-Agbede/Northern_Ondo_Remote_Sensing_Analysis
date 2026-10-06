@@ -307,7 +307,7 @@ Northern_Ondo_Remote_Sensing_Analysis/
 │   ├── NDVI_Change_2016_2025_Map.jpeg
 │   ├── NDWI_Change_2016_2025_Map.jpeg
 │   ├── Annual_Rainfall_Change_2016_2025_Map.jpeg
-│   └── Environmental_Conditions_Index_Map.jpeg
+│   └── Exploratory_Environmental_Conditions_Index_Map.jpeg
 │
 └── documentation/
     ├── METHODOLOGY.md
@@ -324,7 +324,6 @@ Northern_Ondo_Remote_Sensing_Analysis/
 * QGIS 3.44.9
 * Git / GitHub
 
-No Python-based analysis was used in this project.
 
 ---
 
