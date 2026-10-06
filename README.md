@@ -272,7 +272,7 @@ Eight final maps were produced in QGIS.
 
 ### Exploratory Environmental Conditions Index
 
-![Environmental Conditions Index](maps/Environmental_Conditions_Index_Map.jpeg)
+![Environmental Conditions Index](maps/Exploratory_Environmental_Conditions_Index_Map.jpeg)
 
 ---
 
