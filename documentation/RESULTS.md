@@ -62,9 +62,9 @@ The results describe changes in classified land-cover categories and should not,
 
 ## 4. LULC Transition Analysis
 
-The transition analysis identified the major class-to-class changes between 2016 and 2025.
+The transition analysis identified major LULC transitions and persistence categories between 2016 and 2025.
 
-### Major transitions
+### Major transitions and persistence categories
 
 | Transition                                   | Area (km²) |
 | -------------------------------------------- | ---------: |
@@ -76,6 +76,8 @@ The transition analysis identified the major class-to-class changes between 2016
 | Shrubland/Grassland → Shrubland/Grassland    |     514.51 |
 | Shrubland/Grassland → Cropland               |     169.58 |
 | Bare/Sparse Vegetation → Shrubland/Grassland |     149.59 |
+
+Forest → Forest and Shrubland/Grassland → Shrubland/Grassland represent persistence of the same LULC class rather than transitions between different classes. The final transition map highlights six major changes between different LULC classes.
 
 The largest observed change between different classes was **Cropland → Forest**, covering approximately **432.18 km²**.
 
