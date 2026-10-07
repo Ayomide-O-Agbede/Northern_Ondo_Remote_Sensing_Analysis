@@ -104,8 +104,6 @@ The final workflow classified both 2016 and 2025 using the same Random Forest fr
 
 Therefore, **89.41%** is the final 2025 accuracy value used in the project.
 
-The earlier 91.98% value should not be used in the final README, Results or portfolio description.
-
 ---
 
 ## 7. Final Classification Accuracy
