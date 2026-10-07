@@ -2,7 +2,7 @@
 
 ## 1. Purpose
 
-This document records important processing decisions, corrections, export details and reproducibility notes for the **Remote-Sensing Assessment of Environmental Conditions Relevant to Groundwater Recharge in Northern Ondo State, Nigeria**.
+This document records the main processing decisions, corrections, export details and reproducibility notes for the **Remote-Sensing Assessment of Environmental Conditions Relevant to Groundwater Recharge in Northern Ondo State, Nigeria**.
 
 The project was processed using **Google Earth Engine and QGIS**.
 
@@ -18,25 +18,25 @@ The study-area boundary was stored as:
 
 `projects/northern-ondo-remote-sensing/assets/Northern_Ondo_Six_LGAs`
 
-The six LGA features were retained individually rather than dissolved into a single polygon for the main analytical workflow.
+The six LGA features were retained individually rather than dissolved into one polygon for the main analytical workflow.
 
 ---
 
 ## 3. Sentinel-2 Processing
 
-Sentinel-2 Surface Reflectance Harmonized imagery was used:
+Sentinel-2 Surface Reflectance Harmonized imagery was obtained from:
 
 `COPERNICUS/S2_SR_HARMONIZED`
 
-The main Sentinel-2 workflow included:
+The main workflow was:
 
-1. Filtering imagery to the six-LGA study area.
-2. Filtering scenes using a cloudy-pixel threshold of less than 20%.
-3. Masking unwanted pixels using the Scene Classification Layer.
-4. Generating median composites.
-5. Clipping composites to the study area.
+1. Filter imagery to the six-LGA study area.
+2. Exclude scenes with cloudy-pixel percentage of 20% or greater.
+3. Mask unwanted pixels using the Scene Classification Layer.
+4. Generate median composites.
+5. Clip the composites to the study area.
 
-SCL classes removed were:
+The following SCL classes were masked:
 
 * 3 — Cloud shadow
 * 8 — Cloud medium probability
@@ -44,7 +44,7 @@ SCL classes removed were:
 * 10 — Thin cirrus
 * 11 — Snow/ice
 
-The principal seasonal analysis used the **January–March window** for consistency across years.
+The main seasonal analysis used the **January–March window** for consistency across years.
 
 ---
 
@@ -64,10 +64,10 @@ Six LULC classes were used:
 The final training dataset contained **44 polygons**:
 
 ```text
-Built-up             8 polygons
-Cropland              8 polygons
-Forest                8 polygons
-Shrub/Grassland       8 polygons
+Built-up              8 polygons
+Cropland               8 polygons
+Forest                 8 polygons
+Shrub/Grassland        8 polygons
 Bare/Sparse            8 polygons
 Surface Water          4 polygons
 ```
@@ -85,28 +85,26 @@ The Random Forest classification used:
 * Random seed: 42
 * Training/validation split: 70% / 30%
 
-Separate classifiers were trained for 2016 and 2025 using the same classification framework and training polygons.
+Separate classifications were produced for 2016 and 2025 using the same classification framework and training polygons.
 
-This independent classification approach was used to make the two years directly comparable while avoiding reliance on an earlier 2025-only classification.
+This approach allowed the two years to be compared using the same six-class scheme.
 
 ---
 
-## 6. Important 2025 Classification Correction
+## 6. 2025 Classification Correction
 
 An earlier 2025 classification produced an overall accuracy of approximately **91.98%**.
 
-However, this result was not retained for the final change analysis.
+This result was not retained for the final change analysis.
 
-The final workflow independently classified both 2016 and 2025 using the same Random Forest framework.
-
-The final 2025 classification produced:
+The final workflow classified both 2016 and 2025 using the same Random Forest framework. The final 2025 classification produced:
 
 * Overall Accuracy: **89.41%**
 * Kappa: **0.869**
 
-Therefore, **89.41%** is the correct final 2025 accuracy value to report in the project.
+Therefore, **89.41%** is the final 2025 accuracy value used in the project.
 
-The earlier 91.98% value should not be used in the final README, results, figures or portfolio description.
+The earlier 91.98% value should not be used in the final README, Results or portfolio description.
 
 ---
 
@@ -124,7 +122,7 @@ Overall Accuracy = 89.41%
 Kappa = 0.869
 ```
 
-The accuracy assessment used validation pixels derived from the manually delineated training regions.
+The validation samples were derived from the manually delineated training regions.
 
 Therefore, the results should not be described as independent field validation.
 
@@ -132,11 +130,11 @@ Therefore, the results should not be described as independent field validation.
 
 ## 8. LULC Area Calculation
 
-Classified pixels were converted to area using pixel area calculations in Google Earth Engine.
+Classified pixels were converted to area using pixel-area calculations in Google Earth Engine.
 
 Areas were converted from square metres to square kilometres.
 
-The 2016 and 2025 classified rasters have slightly different total valid classified areas because of differences in valid pixels between the independently processed images.
+The 2016 and 2025 classified rasters had slightly different total valid classified areas because of differences in valid pixels between the independently processed images.
 
 The final total classified areas were approximately:
 
@@ -145,7 +143,7 @@ The final total classified areas were approximately:
 2025 = 4188.25 km²
 ```
 
-This difference is a result of valid-pixel availability and does not represent actual loss of study-area boundary.
+This difference is due to valid-pixel availability and does not represent an actual change in the study-area boundary.
 
 ---
 
@@ -177,7 +175,7 @@ Stable classes include:
 55 = Surface Water → Surface Water
 ```
 
-The transition analysis was calculated from pixels with valid classifications in both years.
+The transition analysis used pixels with valid classifications in both years.
 
 ---
 
@@ -185,11 +183,11 @@ The transition analysis was calculated from pixels with valid classifications in
 
 The initial LULC transition raster was represented as a **Long** integer image type.
 
-A Google Earth Engine export to Drive failed with the error:
+A Google Earth Engine export to Drive failed with:
 
 **“Pixel type not supported: Type<Long>.”**
 
-The export was corrected by converting the transition raster to a smaller supported integer type:
+The export was corrected by converting the transition raster to a supported integer type:
 
 ```javascript
 var lulcTransitions = ee.Image(
@@ -199,7 +197,7 @@ var lulcTransitions = ee.Image(
 
 The corrected transition raster was then successfully exported.
 
-This correction affects the export data type only and does not change the transition codes or calculated transition areas.
+This correction changed the export data type only. It did not change the transition codes or calculated transition areas.
 
 ---
 
@@ -224,7 +222,7 @@ NDVI change was calculated as:
 NDVI Change = NDVI 2025 − NDVI 2016
 ```
 
-Positive values represent increased vegetation spectral response.
+Positive values represent an increase in vegetation spectral response.
 
 ---
 
@@ -268,9 +266,7 @@ Annual rainfall change was calculated as:
 Rainfall Change = Rainfall 2025 − Rainfall 2016
 ```
 
-Because CHIRPS has an approximate spatial resolution of **5.5 km**, the rainfall raster appears substantially coarser than the Sentinel-2-derived products.
-
-The rainfall raster was therefore retained at its native analytical scale rather than artificially resampling it to 10 m for visual smoothness.
+CHIRPS has an approximate spatial resolution of **5.5 km**. The rainfall product was therefore retained at its native analytical scale rather than resampled to 10 m.
 
 ---
 
@@ -324,7 +320,7 @@ The correlations describe statistical associations and should not be interpreted
 
 ## 16. Environmental Conditions Index
 
-The Environmental Conditions Index was created by standardizing:
+The Exploratory Environmental Conditions Index was created by standardizing:
 
 * NDVI change
 * NDWI change
@@ -371,7 +367,7 @@ These assets preserve the main derived raster products used in the project.
 
 ## 18. Google Drive Raster Exports
 
-Seven final GeoTIFF products were successfully exported to the Google Drive folder:
+Seven final GeoTIFF products were exported to the Google Drive folder:
 
 `GEE_Exports`
 
@@ -433,7 +429,7 @@ Environmental_Conditions_Index_Map.jpeg
 
 PDF versions were retained separately for printing and formal presentation but are not included in the repository.
 
-No separate `figures/` directory is required because no independent analytical figures were exported from Google Earth Engine.
+No separate `figures/` directory is required because no independent analytical figures were exported.
 
 ---
 
@@ -453,13 +449,13 @@ Common map elements include:
 
 The six LGA boundaries were retained as visible administrative boundaries on the analytical maps.
 
-The dissolved study-area boundary was used specifically for the study-area map to provide a clean outer boundary.
+A dissolved study-area boundary was used specifically for the study-area map to provide a clean outer boundary.
 
 ---
 
 ## 22. LULC Map Symbology
 
-The LULC maps use the six-class scheme:
+The LULC maps use the same six-class scheme for 2016 and 2025:
 
 ```text
 Built-up / Urban           — red
@@ -469,8 +465,6 @@ Shrubland / Grassland      — light green
 Bare / Sparse Vegetation   — brown
 Surface Water              — blue
 ```
-
-The same class meaning was maintained between the 2016 and 2025 maps.
 
 ---
 
@@ -489,7 +483,7 @@ Shrubland/Grassland → Cropland
 Bare/Sparse Vegetation → Shrubland/Grassland
 ```
 
-Stable classes and less prominent transitions were displayed in light grey to maintain visual focus on the principal changes.
+Stable classes and less prominent transitions were displayed in light grey to keep the main changes clear.
 
 ---
 
@@ -509,7 +503,7 @@ The classes represent:
 4. Moderate Vegetation Increase
 5. Vegetation Gain / Improvement
 
-The labels describe the direction and relative magnitude of NDVI change and do not represent statistically significant vegetation changes.
+These labels describe the direction and relative magnitude of NDVI change. They do not represent statistically significant vegetation changes.
 
 ---
 
@@ -529,7 +523,7 @@ The classes represent:
 4. Moderate Water / Moisture Increase
 5. Increased Water / Moisture Signal
 
-The wording intentionally avoids presenting NDWI change as direct surface-water loss or gain.
+The wording avoids presenting NDWI change as direct surface-water loss or gain.
 
 ---
 
@@ -569,8 +563,6 @@ They do not represent measured recharge rates.
 
 ## 28. Reproducibility Notes
 
-The project was structured to preserve the main processing workflow.
-
 Important reproducibility settings include:
 
 * Sentinel-2 collection: `COPERNICUS/S2_SR_HARMONIZED`
@@ -589,8 +581,8 @@ Important reproducibility settings include:
 
 ## 29. Final Processing Summary
 
-The completed workflow progressed through:
+The completed workflow was:
 
 **Data Collection → Sentinel-2 Preprocessing → Training Sample Creation → LULC Classification → Accuracy Assessment → LULC Change Analysis → NDVI Analysis → NDWI Analysis → Rainfall Analysis → Correlation/Trend Analysis → Environmental Conditions Index → Raster Export → QGIS Cartography → Final Map Export**
 
-The repository preserves the scripts, methodology, processing decisions, results and final cartographic outputs needed to understand and reproduce the main analytical workflow.
+The repository preserves the main scripts, methodology, processing decisions, results and final cartographic outputs needed to understand the workflow.
