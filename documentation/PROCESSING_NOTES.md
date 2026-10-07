@@ -427,8 +427,6 @@ Environmental_Conditions_Index_Map.jpeg
 
 PDF versions were retained separately for printing and formal presentation but are not included in the repository.
 
-No separate `figures/` directory is required because no independent analytical figures were exported.
-
 ---
 
 ## 21. Cartographic Notes
