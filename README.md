@@ -2,11 +2,11 @@
 
 ## Overview
 
-This project uses **Google Earth Engine and QGIS** to assess spatial and temporal changes in land use/land cover, vegetation, surface-water/moisture spectral response and rainfall across six Local Government Areas (LGAs) of Northern Ondo State, Nigeria.
+This project uses **Google Earth Engine and QGIS** to assess changes in land use/land cover, vegetation, surface-water/moisture spectral response and rainfall across six Local Government Areas (LGAs) of Northern Ondo State, Nigeria.
 
-The analysis covers **2016–2025** and examines how these environmental patterns may provide context for conditions relevant to groundwater recharge.
+The analysis covers **2016–2025** and examines how these environmental patterns relate to conditions relevant to groundwater recharge.
 
-The study does **not** directly calculate groundwater recharge rates. Instead, it integrates remotely sensed environmental indicators to provide a spatial assessment that can support groundwater and water-resource investigations.
+The study does **not** directly calculate groundwater recharge rates. Instead, it combines remotely sensed environmental indicators to provide spatial and temporal context for groundwater and water-resource investigations.
 
 ---
 
@@ -21,13 +21,13 @@ The study covers six LGAs in Northern Ondo State:
 * Ose
 * Owo
 
-The study area was processed in **Google Earth Engine** and mapped in **QGIS 3.44.9** using WGS 84 / UTM Zone 31N (EPSG:32631).
+The analysis was carried out in **Google Earth Engine** and final maps were produced in **QGIS 3.44.9** using **WGS 84 / UTM Zone 31N (EPSG:32631)**.
 
 ---
 
 ## Aim
 
-To assess spatial and temporal patterns in land cover, vegetation, surface water and rainfall across Northern Ondo State and examine their relevance to environmental conditions associated with groundwater recharge.
+To assess spatial and temporal patterns in land cover, vegetation, surface water/moisture and rainfall across Northern Ondo State and examine their relevance to environmental conditions associated with groundwater recharge.
 
 ---
 
@@ -42,7 +42,7 @@ To assess spatial and temporal patterns in land cover, vegetation, surface water
 
 ---
 
-## Data
+## Data and Methods
 
 ### Sentinel-2
 
@@ -53,7 +53,7 @@ Sentinel-2 Surface Reflectance Harmonized imagery was used for:
 * NDWI
 * Environmental-condition analysis
 
-Main predictor bands:
+The main predictor bands were:
 
 * B2 — Blue
 * B3 — Green
@@ -75,27 +75,6 @@ CHIRPS precipitation data were used to assess:
 
 CHIRPS has an approximate spatial resolution of **5.5 km**.
 
----
-
-## Methodology
-
-### Sentinel-2 Preprocessing
-
-Sentinel-2 Surface Reflectance Harmonized imagery was filtered using:
-
-* Study-area boundary
-* Cloudy-pixel percentage <20%
-* Scene Classification Layer masking
-
-The following SCL classes were masked:
-
-* Cloud shadow
-* Medium/high probability cloud
-* Thin cirrus
-* Snow/ice
-
-Median seasonal composites were then generated.
-
 ### LULC Classification
 
 Six land-cover classes were mapped:
@@ -111,55 +90,9 @@ Six land-cover classes were mapped:
 
 A total of **44 training polygons** were used.
 
-Pixel samples were divided into:
+A Random Forest classifier with **100 trees** and **random seed 42** was used, with a 70/30 training-validation split.
 
-* 70% training
-* 30% validation
-
-A Random Forest classifier with **100 trees** and seed **42** was used.
-
-Independent classifications were produced for 2016 and 2025.
-
-### Accuracy
-
-| Year | Overall Accuracy | Kappa |
-| ---- | ---------------: | ----: |
-| 2016 |           92.60% | 0.902 |
-| 2025 |           89.41% | 0.869 |
-
-### NDVI
-
-NDVI was calculated as:
-
-**NDVI = (NIR − Red) / (NIR + Red)**
-
-using Sentinel-2 B8 and B4.
-
-### NDWI
-
-NDWI was calculated as:
-
-**NDWI = (Green − NIR) / (Green + NIR)**
-
-using Sentinel-2 B3 and B8.
-
-### LULC Change
-
-LULC transitions were calculated by combining the 2016 and 2025 class values:
-
-**Transition Code = (2016 Class × 10) + 2025 Class**
-
-### Environmental Conditions Index
-
-An exploratory index was created from standardized changes in:
-
-* NDVI
-* NDWI
-* Annual rainfall
-
-The standardized layers were averaged to produce a relative Environmental Conditions Index.
-
-This index is **not a groundwater recharge rate or recharge-potential model**.
+Separate classifications were produced for 2016 and 2025 using the same classification framework.
 
 ---
 
@@ -167,24 +100,37 @@ This index is **not a groundwater recharge rate or recharge-potential model**.
 
 ### LULC Change
 
-Between 2016 and 2025:
+| Class                    | 2016 Area (km²) | 2025 Area (km²) | Change (km²) |
+| ------------------------ | --------------: | --------------: | -----------: |
+| Built-up / Urban         |          104.59 |           83.03 |       -21.57 |
+| Cropland                 |          809.59 |          566.68 |      -242.92 |
+| Forest / Woodland        |         2035.53 |         2291.76 |      +256.23 |
+| Shrubland / Grassland    |          874.10 |         1181.58 |      +307.48 |
+| Bare / Sparse Vegetation |          236.16 |           47.10 |      -189.06 |
+| Surface Water            |          100.95 |           17.70 |       -83.25 |
 
-* Forest/Woodland increased by **256.23 km²**.
-* Shrubland/Grassland increased by **307.48 km²**.
-* Cropland decreased by **242.92 km²**.
-* Bare/Sparse Vegetation decreased by **189.06 km²**.
-* Surface Water decreased by **83.25 km²**.
-* Built-up/Urban decreased by **21.57 km²** in the classified results.
+The largest increase was in **Shrubland/Grassland (+307.48 km²)**, followed by **Forest/Woodland (+256.23 km²)**.
+
+The largest decrease was in **Cropland (-242.92 km²)**.
 
 The largest observed inter-class transition was:
 
 **Cropland → Forest: 432.18 km²**
 
-These classified changes should not be interpreted as proof of the processes responsible for the changes.
+These classified changes do not by themselves establish the processes responsible for the changes.
+
+### LULC Accuracy
+
+| Year | Overall Accuracy | Kappa |
+| ---- | ---------------: | ----: |
+| 2016 |           92.60% | 0.902 |
+| 2025 |           89.41% | 0.869 |
+
+The validation samples were derived from manually delineated training regions, so the accuracy assessment should not be treated as independent field validation.
 
 ### NDVI
 
-Mean January–March NDVI increased from:
+Mean January–March NDVI changed from:
 
 **0.472 in 2016 → 0.501 in 2025**
 
@@ -194,7 +140,7 @@ Approximately **63.78%** of the valid comparison area showed an increase in NDVI
 
 Mean January–March NDWI changed from:
 
-**−0.529 in 2016 → −0.550 in 2025**
+**-0.529 in 2016 → -0.550 in 2025**
 
 Approximately **63.23%** of the valid comparison area showed a decrease in NDWI.
 
@@ -202,39 +148,51 @@ NDWI change represents a change in spectral water/moisture response and not dire
 
 ### Rainfall
 
-Annual rainfall showed substantial interannual variability.
+Annual rainfall showed substantial year-to-year variability.
 
 The fitted annual rainfall trend was:
 
 **+4.43 mm/year**
 
-but was not statistically significant:
+with:
 
 **r = 0.091, p = 0.802**
 
-January–March rainfall showed a fitted trend of:
+January–March rainfall had a fitted trend of:
 
-**−2.38 mm/year**
+**-2.38 mm/year**
 
-which was also not statistically significant:
+with:
 
-**r = −0.197, p = 0.586**
+**r = -0.197, p = 0.586**
+
+Neither trend was statistically significant.
 
 ### Correlations
 
-January–March rainfall and NDVI:
+| Relationship                   |      r |      p |
+| ------------------------------ | -----: | -----: |
+| January–March rainfall vs NDVI |  0.040 |  0.913 |
+| January–March rainfall vs NDWI |  0.042 |  0.909 |
+| January–March NDVI vs NDWI     | -0.917 | <0.001 |
 
-**r = 0.040, p = 0.913**
+These correlations are exploratory and do not establish causation.
 
-January–March rainfall and NDWI:
+### Environmental Conditions Index
 
-**r = 0.042, p = 0.909**
+An exploratory Environmental Conditions Index was created from standardized changes in:
 
-January–March NDVI and NDWI:
+* NDVI
+* NDWI
+* Annual rainfall
 
-**r = −0.917, p < 0.001**
+The index had:
 
-The correlations are exploratory and do not establish causation.
+* Minimum: **-1.533**
+* Mean: **0.035**
+* Maximum: **1.890**
+
+The index provides a relative spatial synthesis of environmental conditions relevant to groundwater recharge. It is **not a groundwater recharge rate, recharge-potential model or direct hydrogeological measurement**.
 
 ---
 
@@ -272,7 +230,7 @@ Eight final maps were produced in QGIS.
 
 ### Exploratory Environmental Conditions Index
 
-![Environmental Conditions Index](maps/Exploratory_Environmental_Conditions_Index_Map.jpeg)
+![Environmental Conditions Index](maps/Environmental_Conditions_Index_Map.jpeg)
 
 ---
 
@@ -307,7 +265,7 @@ Northern_Ondo_Remote_Sensing_Analysis/
 │   ├── NDVI_Change_2016_2025_Map.jpeg
 │   ├── NDWI_Change_2016_2025_Map.jpeg
 │   ├── Annual_Rainfall_Change_2016_2025_Map.jpeg
-│   └── Exploratory_Environmental_Conditions_Index_Map.jpeg
+│   └── Environmental_Conditions_Index_Map.jpeg
 │
 └── documentation/
     ├── METHODOLOGY.md
@@ -323,7 +281,6 @@ Northern_Ondo_Remote_Sensing_Analysis/
 * Google Cloud / Earth Engine Cloud Project
 * QGIS 3.44.9
 * Git / GitHub
-
 
 ---
 
@@ -346,10 +303,22 @@ A quantitative groundwater-recharge assessment would require additional hydrogeo
 
 ## Project Significance
 
-This project demonstrates an integrated **remote sensing + GIS workflow** for environmental assessment relevant to groundwater studies.
+This project demonstrates a **remote sensing + GIS workflow** for environmental assessment relevant to groundwater studies.
 
-It combines:
+The workflow combines:
 
 **Satellite Remote Sensing → Land-Cover Classification → Change Detection → Vegetation Analysis → Water/Moisture Analysis → Rainfall Analysis → Environmental Integration → GIS Cartography**
 
-The workflow provides a foundation for future integration with hydrogeological observations, groundwater-level data, geophysical investigations and hydrological modelling.
+The results provide a basis for future integration with hydrogeological observations, groundwater-level data, geophysical investigations and hydrological modelling.
+
+---
+
+## Author
+
+**Ayomide Odunayo Agbede**
+
+Hydrogeophysicist | GIS & Remote Sensing | Hydrology & Water Resources
+
+GitHub: **Ayomide-O-Agbede**
+
+This project was independently developed as part of my research and portfolio work in **remote sensing, GIS, environmental assessment and water resources**.
