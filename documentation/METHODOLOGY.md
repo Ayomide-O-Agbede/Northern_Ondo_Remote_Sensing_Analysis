@@ -2,11 +2,13 @@
 
 ## 1. Project Overview
 
-This study assessed spatial and temporal patterns in land cover, vegetation, surface-water/moisture spectral response and rainfall across six Local Government Areas (LGAs) of Northern Ondo State, Nigeria, and examined their relevance to environmental conditions associated with groundwater recharge.
+This study assessed spatial and temporal patterns in land cover, vegetation, surface-water/moisture spectral response and rainfall across six Local Government Areas (LGAs) of Northern Ondo State, Nigeria.
 
-The analysis covered **2016–2025** and was conducted primarily in **Google Earth Engine (GEE)**, with **QGIS 3.44.9** used for final spatial visualization and cartographic production.
+The analysis covered **2016–2025** and examined these environmental patterns in relation to conditions relevant to groundwater recharge.
 
-The study was designed as a remote-sensing and geospatial assessment. It does not directly estimate groundwater recharge rates.
+The work was carried out mainly in **Google Earth Engine (GEE)**, while **QGIS 3.44.9** was used for final spatial visualization and map production.
+
+The study does not directly estimate groundwater recharge rates.
 
 ---
 
@@ -23,7 +25,7 @@ The study area comprises six LGAs in Northern Ondo State:
 
 The six LGA boundaries were retained as individual features in Google Earth Engine and QGIS to support spatial comparison and map presentation.
 
-The study area boundary was stored in Google Earth Engine as:
+The study-area boundary was stored in Google Earth Engine as:
 
 `projects/northern-ondo-remote-sensing/assets/Northern_Ondo_Six_LGAs`
 
@@ -33,11 +35,11 @@ The study area boundary was stored in Google Earth Engine as:
 
 ### 3.1 Sentinel-2 Imagery
 
-Sentinel-2 Surface Reflectance Harmonized imagery was obtained from the Google Earth Engine collection:
+Sentinel-2 Surface Reflectance Harmonized imagery was obtained from:
 
 `COPERNICUS/S2_SR_HARMONIZED`
 
-The analysis used the following bands:
+The following bands were used:
 
 * B2 — Blue
 * B3 — Green
@@ -48,9 +50,7 @@ The analysis used the following bands:
 
 The imagery was filtered spatially to the study area and temporally to the required analysis periods.
 
-For the main seasonal analyses, January–March imagery was used to maintain a consistent seasonal window across the study period.
-
----
+January–March imagery was used for the main seasonal Sentinel-2 analysis to maintain the same seasonal window across the study period.
 
 ### 3.2 Cloud and Cloud-Shadow Masking
 
@@ -85,13 +85,9 @@ Six LULC classes were defined:
 |     4 | Bare / Sparse Vegetation |
 |     5 | Surface Water            |
 
-The classification was designed to provide a consistent land-cover framework for evaluating spatial patterns and changes relevant to environmental conditions.
-
----
-
 ### 4.2 Training Data
 
-Training polygons were manually delineated in Google Earth Engine for each LULC class.
+Training polygons were manually delineated in Google Earth Engine.
 
 The final training dataset contained:
 
@@ -102,36 +98,30 @@ The final training dataset contained:
 * 8 Bare/Sparse Vegetation polygons
 * 4 Surface Water polygons
 
-This produced a total of **44 training polygons**.
+This gave a total of **44 training polygons**.
 
-The polygons represented areas considered visually representative of their respective classes.
-
----
+The polygons were selected to represent identifiable examples of each class.
 
 ### 4.3 Predictor Variables
 
-The following Sentinel-2 bands were used as Random Forest predictor variables:
+The Random Forest predictor variables were:
 
 **B2, B3, B4, B8, B11 and B12.**
 
-The combination included visible, near-infrared and short-wave infrared information to improve separation between land-cover classes.
-
----
+These bands provide visible, near-infrared and short-wave infrared information for separating the six land-cover classes.
 
 ### 4.4 Sampling and Classification
 
-Pixel samples were extracted from the training polygons at the available spatial resolution of the predictor imagery.
-
-The resulting samples were randomly divided into:
+Pixel samples were extracted from the training polygons and randomly divided into:
 
 * **70% training**
 * **30% validation**
 
 A fixed random seed of **42** was used.
 
-A **Random Forest classifier with 100 trees** and seed 42 was trained for the classification.
+A **Random Forest classifier with 100 trees** was used for classification.
 
-Independent classifications were produced for **2016 and 2025** using the same training framework.
+Separate classifications were produced for **2016 and 2025** using the same classification framework and training polygons.
 
 ---
 
@@ -139,7 +129,7 @@ Independent classifications were produced for **2016 and 2025** using the same t
 
 Classification performance was assessed using the validation samples.
 
-The following metrics were calculated:
+The assessment included:
 
 * Overall Accuracy
 * Kappa Coefficient
@@ -147,29 +137,26 @@ The following metrics were calculated:
 * Producer's Accuracy
 * User's Accuracy
 
-### 2016 Classification
+The final overall accuracy and Kappa values were:
 
-* Overall Accuracy: **92.60%**
-* Kappa: **0.902**
+| Year | Overall Accuracy | Kappa |
+| ---- | ---------------: | ----: |
+| 2016 |           92.60% | 0.902 |
+| 2025 |           89.41% | 0.869 |
 
-### 2025 Classification
-
-* Overall Accuracy: **89.41%**
-* Kappa: **0.869**
-
-The accuracy assessment indicates good classification performance, but the results should be interpreted with caution because the validation samples originated from manually delineated training regions rather than independent field observations.
+The validation samples were derived from manually delineated training regions. Therefore, the accuracy assessment should not be treated as independent field validation.
 
 ---
 
 ## 6. LULC Area and Transition Analysis
 
-Classified LULC images for 2016 and 2025 were used to calculate the area occupied by each land-cover class.
+Classified LULC images for 2016 and 2025 were used to calculate the area occupied by each class.
 
 Pixel area was calculated and converted from square metres to square kilometres.
 
-Percentage change was assessed using the classified areas for each year.
+The 2016 and 2025 classified images had slightly different valid classified areas because of differences in valid pixels between the independently processed images.
 
-A transition code was generated by combining the 2016 and 2025 class values:
+LULC transitions were coded as:
 
 **Transition Code = (2016 Class × 10) + 2025 Class**
 
@@ -179,15 +166,15 @@ For example:
 * 23 = Forest → Shrubland/Grassland
 * 31 = Shrubland/Grassland → Cropland
 
-The resulting transition raster was used to quantify the spatial area associated with individual land-cover transitions.
+The transition raster was used to quantify the area associated with individual land-cover transitions.
 
-Transition analysis was based on pixels with valid classifications in both years.
+Only pixels with valid classifications in both years were included in the transition analysis.
 
 ---
 
 ## 7. Vegetation Analysis Using NDVI
 
-Vegetation condition was assessed using the Normalized Difference Vegetation Index:
+Vegetation condition was assessed using:
 
 **NDVI = (NIR − Red) / (NIR + Red)**
 
@@ -225,7 +212,7 @@ NDWI change was calculated as:
 
 **NDWI Change = NDWI 2025 − NDWI 2016**
 
-Positive values indicate an increased water/moisture spectral signal, while negative values indicate a decreased signal.
+Positive values indicate an increase in the water/moisture spectral signal, while negative values indicate a decrease.
 
 NDWI was treated as a spectral indicator and was not interpreted as a direct measurement of surface-water volume or groundwater recharge.
 
@@ -243,7 +230,7 @@ Annual precipitation totals were calculated for each year.
 
 ### January–March Rainfall
 
-January–March precipitation totals were calculated to provide a seasonal rainfall series consistent with the Sentinel-2 seasonal analysis.
+January–March precipitation totals were calculated to provide a seasonal rainfall series consistent with the Sentinel-2 analysis.
 
 Rainfall change between 2016 and 2025 was calculated as:
 
@@ -251,7 +238,7 @@ Rainfall change between 2016 and 2025 was calculated as:
 
 Annual rainfall change was also mapped spatially across the study area.
 
-Because CHIRPS has a spatial resolution of approximately 5.5 km, rainfall patterns were interpreted at a relatively coarse spatial scale.
+CHIRPS has an approximate spatial resolution of **5.5 km**, so rainfall patterns were interpreted at a relatively coarse spatial scale.
 
 ---
 
@@ -266,7 +253,7 @@ Temporal series were examined for:
 
 Linear trends were estimated for the rainfall series.
 
-Trend strength and statistical significance were evaluated using correlation and associated p-values.
+Trend strength and statistical significance were evaluated using correlation coefficients and associated p-values.
 
 The results were interpreted as temporal associations rather than evidence of causal relationships.
 
@@ -280,15 +267,15 @@ Pearson correlation was used to explore relationships between:
 * January–March rainfall and NDWI
 * January–March NDVI and NDWI
 
-The analysis covered the annual values from **2016–2025**.
+The analysis covered the annual values from **2016–2025**, giving ten annual observations.
 
-Correlation results were treated as exploratory because the time series contains only ten annual observations and the variables may be influenced by multiple environmental factors.
+The correlation results were treated as exploratory because of the small sample size and the influence of other environmental factors.
 
 ---
 
 ## 12. Exploratory Environmental Conditions Index
 
-An exploratory Environmental Conditions Index was developed to integrate changes in:
+An exploratory Environmental Conditions Index was developed from changes in:
 
 * NDVI
 * NDWI
@@ -302,7 +289,7 @@ The three standardized layers were then averaged:
 
 Positive values indicate relatively more favourable environmental conditions compared with the study-area average, while negative values indicate relatively less favourable conditions.
 
-The index is an exploratory synthesis of environmental indicators. It is **not a groundwater recharge rate, recharge potential model or direct hydrogeological measurement**.
+The index is an exploratory synthesis of environmental indicators. It is **not a groundwater recharge rate, recharge-potential model or direct hydrogeological measurement**.
 
 ---
 
@@ -325,7 +312,7 @@ Google Earth Engine was used for:
 * Environmental Conditions Index generation
 * Export of final raster products
 
-The derived raster products were stored as permanent Earth Engine assets and exported as GeoTIFF files for cartographic processing.
+The main derived raster products were stored as Google Earth Engine assets and exported as GeoTIFF files for cartographic processing.
 
 ---
 
@@ -346,7 +333,7 @@ Eight final maps were produced:
 7. Annual Rainfall Change 2016–2025
 8. Exploratory Environmental Conditions Relevant to Groundwater Recharge
 
-The final maps were prepared using a consistent A4 landscape layout with:
+The maps were prepared using a consistent A4 landscape layout with:
 
 * Map title
 * Legend
@@ -362,7 +349,7 @@ The final cartographic project used **WGS 84 / UTM Zone 31N (EPSG:32631)**.
 
 ## 15. Final Raster Exports
 
-Seven main analytical raster products were exported from Google Earth Engine:
+Seven main analytical raster products were exported:
 
 1. LULC 2016
 2. LULC 2025
@@ -378,7 +365,7 @@ The LULC, NDVI, NDWI and transition products were exported at **10 m**, while th
 
 ## 16. Methodological Limitations
 
-Several limitations should be considered when interpreting the results:
+The following limitations should be considered when interpreting the results:
 
 1. Remote-sensing indices provide indirect information about environmental conditions and cannot directly quantify groundwater recharge.
 2. LULC classification contains uncertainty that may affect estimated area and transition values.
@@ -386,15 +373,15 @@ Several limitations should be considered when interpreting the results:
 4. CHIRPS rainfall has a much coarser spatial resolution than Sentinel-2 imagery.
 5. Differences in spectral conditions between years may influence apparent LULC and index changes.
 6. Seasonal imagery does not capture all intra-annual environmental variability.
-7. The Environmental Conditions Index uses a simple equal-weight combination of standardized variables and therefore should be regarded as exploratory.
+7. The Environmental Conditions Index uses a simple equal-weight combination of standardized variables and should therefore be treated as exploratory.
 8. Correlation does not establish causation, particularly for relationships among rainfall, vegetation and water/moisture indices.
 
 ---
 
 ## 17. Overall Analytical Workflow
 
-The overall workflow can be summarised as:
+The overall workflow was:
 
 **Study Area Definition → Sentinel-2 and CHIRPS Data Preparation → Sentinel-2 Seasonal Compositing → LULC Training → Random Forest Classification → Accuracy Assessment → LULC Area and Transition Analysis → NDVI Analysis → NDWI Analysis → Rainfall Analysis → Temporal and Correlation Analysis → Environmental Conditions Index → QGIS Cartography → Final Map Production**
 
-This workflow integrates remote sensing and GIS techniques to provide a spatial assessment of environmental conditions relevant to groundwater recharge across Northern Ondo State.
+This workflow combines remote sensing and GIS techniques to assess environmental conditions relevant to groundwater recharge across Northern Ondo State.
