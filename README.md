@@ -319,6 +319,4 @@ The results provide a basis for future integration with hydrogeological observat
 
 Hydrogeophysicist | GIS & Remote Sensing | Hydrology & Water Resources
 
-GitHub: **Ayomide-O-Agbede**
-
 This project was independently developed as part of my research and portfolio work in **remote sensing, GIS, environmental assessment and water resources**.
